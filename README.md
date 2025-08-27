@@ -31,11 +31,7 @@ PulseFeed/
 │── app.py                # Main Flask app  
 │── static/               # CSS, JS, images  
 │── templates/            # HTML templates  
-│── models/               # Database models  
-│── routes/               # App routes (auth, news, saved, etc.)  
-│── utils/                # Helper functions  
-│── config.py             # App configuration  
-│── requirements.txt      # Dependencies  
+│── instance/             # database
 │── README.md             # Documentation  
 
 ⚙️ Installation & Setup
