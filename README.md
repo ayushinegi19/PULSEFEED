@@ -26,13 +26,18 @@ Database: SQLite (can be swapped with PostgreSQL/MySQL)
 
 APIs: NewsAPI (for live news data)
 
-📂 Project Structure
+📂 Project Structure: 
+
 PulseFeed/
-│── app.py                # Main Flask app  
+│── instance/             # database
 │── static/               # CSS, JS, images  
 │── templates/            # HTML templates  
-│── instance/             # database
 │── README.md             # Documentation  
+├── [ INSTRUCTIONS ].txt  # instructions
+├── app.py                # app
+├── requirements.txt      # requirements
+├── cs_checkuserinDB.py   # check user acc 
+
 
 ⚙️ Installation & Setup
 
