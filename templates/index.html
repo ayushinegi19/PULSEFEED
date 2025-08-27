@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseFeed - Personalized News</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-globe me-2"></i>PulseFeed
+            </a>
+           
+            <div class="ms-auto navbar-nav">
+                <div class=" mx-auto me-5 my-auto">
+                    <div class="input-group">
+                        <input type="text" id="search-input" class="form-control" placeholder="Search an article">
+                        <button class="btn btn-secondary" type="button" id="search-button">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+
+                <a class="nav-link me-3" href="{{ url_for('index') }}">
+                    <i class="bi bi-house me-1"></i>Home
+                </a>
+                <a class="nav-link me-3" href="{{ url_for('set_preferences') }}">
+                    <i class="bi bi-gear me-1"></i>Preferences
+                </a>
+                <a class="nav-link me-3" href="{{ url_for('saved') }}">
+                    <i class="bi bi-bookmark me-1"></i>Saved
+                </a>
+                <a class="nav-link" href="{{ url_for('logout') }}">
+                    <i class="bi bi-box-arrow-right me-1"></i>Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 py-5">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="display-6 text-center mb-4">
+                    <i class="bi bi-newspaper me-2"></i> Your Personalized News Feed
+                </h2>
+            </div>
+        </div>
+        <div id="news-container" class="news-container"></div>
+    </div>
+
+
+    <footer class="footer mt-auto py-3 bg-light text-center">
+        <div class="container">
+            <span class="text-muted">© 2024 PulseFeed - Your Personal News Companion</span>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
