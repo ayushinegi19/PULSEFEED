@@ -146,12 +146,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveArticle(articleData);
             });
         });
+
+        // Log 'clicked' interactions when Read More links are opened
+        document.querySelectorAll('.read-more').forEach(link => {
+            link.addEventListener('click', function() {
+                const card = this.closest('.news-card');
+                const btn = card ? card.querySelector('.save-btn') : null;
+                if (btn) {
+                    const articleData = JSON.parse(btn.getAttribute('data-article').replace(/&apos;/g, "'"));
+                    logInteraction(articleData, 'clicked');
+                }
+            });
+        });
     }
     
     // Save article
     async function saveArticle(article) {
         try {
-            const response = await fetch('http://127.0.0.1:5000/save_article', {
+            const response = await fetch('/save_article', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -162,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             
             if (response.ok) {
+                logInteraction(article, 'saved');
                 // Create a temporary notification
                 const notification = document.createElement('div');
                 notification.className = 'save-notification';
@@ -418,9 +431,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start the app
     init();
 
+    // Log interaction (fire-and-forget, don't block UI)
+    function logInteraction(article, interactionType) {
+        try {
+            fetch('/log_interaction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...article, interaction_type: interactionType })
+            }).catch(err => console.error('Failed to log interaction:', err));
+        } catch (err) {
+            console.error('Failed to log interaction:', err);
+        }
+    }
+
     // Expose functions for global use
     window.fetchNews = fetchNews;
     window.fetchSavedArticles = fetchSavedArticles;
     window.saveArticle = saveArticle;
     window.removeFromSaved = removeFromSaved;
+    window.logInteraction = logInteraction;
 });

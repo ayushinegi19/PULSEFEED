@@ -40,3 +40,15 @@ class CachedArticle(db.Model):
     cache_key = db.Column(db.String(255), index=True)
     articles_json = db.Column(db.Text)
     fetched_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class ArticleInteraction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    url_hash = db.Column(db.String(64), nullable=False, index=True)
+    interaction_type = db.Column(db.String(20), nullable=False)
+    title = db.Column(db.Text)
+    description = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref="interactions")
