@@ -26,6 +26,10 @@ class Config:
     # Cache TTL in seconds (default 10 min)
     NEWS_CACHE_TTL = int(os.environ.get("NEWS_CACHE_TTL", "600"))
 
+    # Feature flags
+    ENABLE_HISTORY_RANKING = os.environ.get("ENABLE_HISTORY_RANKING", "true").lower() == "true"
+    HISTORY_MIN_INTERACTIONS = int(os.environ.get("HISTORY_MIN_INTERACTIONS", "5"))
+
     # Debug flag
     FLASK_ENV = os.environ.get("FLASK_ENV", "production")
     DEBUG = FLASK_ENV == "development"

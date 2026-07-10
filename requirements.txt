@@ -13,4 +13,6 @@ python-dotenv==1.0.1
 requests==2.32.3
 psycopg2-binary==2.9.10
 gunicorn==23.0.0
+Flask-Migrate==4.1.0
+alembic==1.14.1
 https://stackblitz.com/storage/blobs/eyJfcmFpbHMiOnsiZGF0YSI6MTcyNDEwNDkxLCJwdXIiOiJibG9iX2lkIn19--7f0da363e9e86bd3477cd6f1305e16a98f8467df/requirements.txt

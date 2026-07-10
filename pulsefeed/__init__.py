@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from werkzeug.routing import BuildError
 import logging
 import sys
@@ -8,12 +9,14 @@ import flask
 
 db = SQLAlchemy()
 login_manager = LoginManager()
+migrate = Migrate()
 
 # Map bare endpoint names (used in templates) to blueprint-qualified endpoints
 BARE_ENDPOINT_MAP = {
     "index": "news.index",
     "get_news": "news.get_news",
     "search_news": "news.search_news",
+    "log_interaction": "news.log_interaction",
     "login": "auth.login",
     "register": "auth.register",
     "logout": "auth.logout",
@@ -53,6 +56,7 @@ def create_app(config_class=None):
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
+    migrate.init_app(app, db)
 
     # Models must be imported before create_all so tables register
     from . import models  # noqa: F401
@@ -77,8 +81,5 @@ def create_app(config_class=None):
         raise error
 
     app.url_build_error_handlers.append(_remap_bare_endpoint)
-
-    with app.app_context():
-        db.create_all()
 
     return app
