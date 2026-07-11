@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Store all news articles to filter locally
     let allNewsArticles = [];
+    let allNewsClusters = [];
 
     // Add date display to navbar
     function setupDateDisplay() {
@@ -101,7 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Store all news articles
-            allNewsArticles = news;
+            allNewsClusters = news;
+            allNewsArticles = news.map(item => {
+                if (item.representative) {
+                    return item.representative;
+                }
+                return item;
+            });
             
             // Render news articles
             renderNewsArticles(news);
@@ -111,11 +118,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Render news articles
+    // Render reliability badge HTML
+    function renderReliabilityBadge(reliability) {
+        if (!reliability) return '';
+        return `<span class="reliability-badge" style="background-color: ${reliability.color};" title="Source: ${reliability.domain || 'unknown'}">${reliability.label}</span>`;
+    }
+
+    // Render news articles (supports both flat articles and clustered results)
     function renderNewsArticles(articles) {
         if (!newsContainer) return;
         
-        newsContainer.innerHTML = articles.map(article => `
+        newsContainer.innerHTML = articles.map(item => {
+            let article, alsoCovered = '', clusterSize = 1;
+            if (item.representative) {
+                article = item.representative;
+                clusterSize = item.cluster_size || 1;
+                if (item.also_covered_by && item.also_covered_by.length > 0) {
+                    alsoCovered = `<div class="also-covered">Also covered by: ${item.also_covered_by.join(', ')}</div>`;
+                }
+            } else {
+                article = item;
+            }
+            const reliabilityBadge = renderReliabilityBadge(article.reliability);
+            return `
             <div class="news-card">
                 <img src="${article.urlToImage || '/static/placeholder.jpg'}" 
                      alt="${article.title}" 
@@ -123,9 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="news-card-content">
                     <h3 class="news-card-title">${article.title}</h3>
                     <p class="news-card-description">${article.description || 'No description available'}</p>
+                    ${alsoCovered}
                     <div class="news-meta">
                         <div class="news-source-date">
                             <span class="news-source">${article.source}</span>
+                            ${reliabilityBadge}
                             <span class="news-date">${formatDate(article.publishedAt)}</span>
                         </div>
                         <div class="news-actions">
@@ -136,8 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
 
         // Add event listeners to save buttons
         document.querySelectorAll('.save-btn').forEach(button => {
@@ -313,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchTerm === '') {
             // If search is empty, show all articles
             if (newsContainer) {
-                renderNewsArticles(allNewsArticles);
+                renderNewsArticles(allNewsClusters);
             } else if (savedNewsContainer) {
                 fetchSavedArticles();
             }
@@ -321,8 +348,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Filter articles based on search term
-        if (newsContainer && allNewsArticles.length > 0) {
-            const filteredArticles = allNewsArticles.filter(article => {
+        if (newsContainer && allNewsClusters.length > 0) {
+            const filteredClusters = allNewsClusters.filter(item => {
+                const article = item.representative || item;
+                const title = article.title ? article.title.toLowerCase() : '';
+                const description = article.description ? article.description.toLowerCase() : '';
+                const source = article.source ? article.source.toLowerCase() : '';
+                
+                return title.includes(searchTerm) || 
+                       description.includes(searchTerm) || 
+                       source.includes(searchTerm);
+            });
+            
+            if (filteredClusters.length === 0) {
                 const title = article.title ? article.title.toLowerCase() : '';
                 const description = article.description ? article.description.toLowerCase() : '';
                 const source = article.source ? article.source.toLowerCase() : '';
@@ -347,10 +385,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 document.getElementById('clear-search').addEventListener('click', () => {
                     searchInput.value = '';
-                    renderNewsArticles(allNewsArticles);
+                    renderNewsArticles(allNewsClusters);
                 });
             } else {
-                renderNewsArticles(filteredArticles);
+                renderNewsArticles(filteredClusters);
             }
         } else if (savedNewsContainer) {
             // For saved articles page, we'll search on the server

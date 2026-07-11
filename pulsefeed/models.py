@@ -52,3 +52,14 @@ class ArticleInteraction(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User", backref="interactions")
+
+
+class TrendingTopic(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    topic = db.Column(db.String(255), nullable=False, index=True)
+    keyword = db.Column(db.String(255), nullable=False)
+    article_count = db.Column(db.Integer, default=0)
+    baseline_count = db.Column(db.Float, default=0.0)
+    multiplier = db.Column(db.Float, default=1.0)
+    articles_json = db.Column(db.Text)
+    detected_at = db.Column(db.DateTime, default=datetime.utcnow)

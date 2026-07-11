@@ -455,3 +455,24 @@ body {
 }
 
 
+
+/* Reliability badge */
+.reliability-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+/* Also covered by */
+.also-covered {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}

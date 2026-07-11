@@ -26,6 +26,8 @@ BARE_ENDPOINT_MAP = {
     "get_saved_articles": "saved.get_saved_articles",
     "delete_saved_article": "saved.delete_saved_article",
     "search_saved_articles": "saved.search_saved_articles",
+    "trending": "trending.trending",
+    "refresh_trending": "trending.refresh_trending",
 }
 
 
@@ -67,12 +69,14 @@ def create_app(config_class=None):
     from .routes.preferences import prefs_bp
     from .routes.saved import saved_bp
     from .routes.health import health_bp
+    from .routes.trending import trending_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(news_bp)
     app.register_blueprint(prefs_bp)
     app.register_blueprint(saved_bp)
     app.register_blueprint(health_bp)
+    app.register_blueprint(trending_bp)
 
     # Handle bare endpoint names in url_for (templates use unqualified names)
     def _remap_bare_endpoint(error, endpoint, values):
