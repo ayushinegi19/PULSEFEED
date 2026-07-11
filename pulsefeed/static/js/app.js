@@ -361,16 +361,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             if (filteredClusters.length === 0) {
-                const title = article.title ? article.title.toLowerCase() : '';
-                const description = article.description ? article.description.toLowerCase() : '';
-                const source = article.source ? article.source.toLowerCase() : '';
-                
-                return title.includes(searchTerm) || 
-                       description.includes(searchTerm) || 
-                       source.includes(searchTerm);
-            });
-            
-            if (filteredArticles.length === 0) {
                 newsContainer.innerHTML = `
                     <div class="news-error">
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
