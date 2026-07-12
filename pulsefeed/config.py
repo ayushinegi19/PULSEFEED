@@ -30,16 +30,6 @@ class Config:
     ENABLE_HISTORY_RANKING = os.environ.get("ENABLE_HISTORY_RANKING", "true").lower() == "true"
     HISTORY_MIN_INTERACTIONS = int(os.environ.get("HISTORY_MIN_INTERACTIONS", "5"))
 
-    ENABLE_CLUSTERING = os.environ.get("ENABLE_CLUSTERING", "true").lower() == "true"
-    CLUSTER_SIMILARITY_THRESHOLD = float(os.environ.get("CLUSTER_SIMILARITY_THRESHOLD", "0.5"))
-
-    ENABLE_RELIABILITY = os.environ.get("ENABLE_RELIABILITY", "true").lower() == "true"
-
-    ENABLE_TRENDING = os.environ.get("ENABLE_TRENDING", "true").lower() == "true"
-    TRENDING_SPIKE_MULTIPLIER = float(os.environ.get("TRENDING_SPIKE_MULTIPLIER", "2.0"))
-    TRENDING_WINDOW_HOURS = int(os.environ.get("TRENDING_WINDOW_HOURS", "6"))
-    TRENDING_BASELINE_DAYS = int(os.environ.get("TRENDING_BASELINE_DAYS", "7"))
-
     # Debug flag
     FLASK_ENV = os.environ.get("FLASK_ENV", "production")
     DEBUG = FLASK_ENV == "development"

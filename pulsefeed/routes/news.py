@@ -4,8 +4,6 @@ from flask_login import login_required, current_user
 
 from ..services.news_service import fetch_personalized_news
 from ..services.ranking_service import rank_articles, log_interaction
-from ..services.cluster_service import cluster_articles
-from ..services.reliability_service import annotate_articles
 from . import news_bp
 
 logger = logging.getLogger(__name__)
@@ -33,19 +31,9 @@ def get_news():
                 {"error": "No news articles found for selected preferences."}
             )
 
-        # Phase 4: Attach reliability badges
-        if current_app.config.get("ENABLE_RELIABILITY", False):
-            news = annotate_articles(news)
-
-        # Phase 2: Re-rank by reading history (cold-start fallback inside)
         if current_app.config.get("ENABLE_HISTORY_RANKING", False):
             min_inter = current_app.config.get("HISTORY_MIN_INTERACTIONS", 5)
             news = rank_articles(current_user.id, news, min_interactions=min_inter)
-
-        # Phase 3: Cluster duplicate articles
-        if current_app.config.get("ENABLE_CLUSTERING", False):
-            threshold = current_app.config.get("CLUSTER_SIMILARITY_THRESHOLD", 0.5)
-            news = cluster_articles(news, threshold=threshold)
 
         return jsonify(news)
 
@@ -84,10 +72,6 @@ def search_news():
                 or query in article.get("source", "").lower()
             )
         ]
-
-        # Apply reliability badges to search results too
-        if current_app.config.get("ENABLE_RELIABILITY", False):
-            filtered_news = annotate_articles(filtered_news)
 
         return jsonify(filtered_news)
 

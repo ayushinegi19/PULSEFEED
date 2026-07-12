@@ -10,16 +10,6 @@ from .. import db
 
 logger = logging.getLogger(__name__)
 
-# Map NewsAPI-style source identifiers to NewsData.io domain names
-SOURCE_DOMAIN_MAP = {
-    "bbc-news": "bbc.com",
-    "cnn": "cnn.com",
-    "techcrunch": "techcrunch.com",
-    "business-insider": "businessinsider.com",
-    "espn": "espn.com",
-    "national-geographic": "nationalgeographic.com",
-}
-
 
 def _cache_key(categories, sources, country):
     raw = f"{categories}|{sources}|{country}"
@@ -47,14 +37,10 @@ def _fetch_from_newsdata(categories_list, sources_list, country):
     all_articles = []
 
     if sources_list:
-        domains = [
-            SOURCE_DOMAIN_MAP.get(s.strip(), s.strip())
-            for s in sources_list
-        ]
         params = {
             "apikey": api_key,
             "language": "en",
-            "domain": ",".join(domains),
+            "domain": ",".join(s.strip() for s in sources_list),
         }
         resp = requests.get(f"{base}/news", params=params, timeout=timeout)
         resp.raise_for_status()
