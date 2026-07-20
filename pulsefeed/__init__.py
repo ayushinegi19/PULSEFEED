@@ -11,7 +11,6 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
 
-# Map bare endpoint names (used in templates) to blueprint-qualified endpoints
 BARE_ENDPOINT_MAP = {
     "index": "news.index",
     "get_news": "news.get_news",
@@ -26,8 +25,7 @@ BARE_ENDPOINT_MAP = {
     "get_saved_articles": "saved.get_saved_articles",
     "delete_saved_article": "saved.delete_saved_article",
     "search_saved_articles": "saved.search_saved_articles",
-    "trending": "trending.trending",
-    "refresh_trending": "trending.refresh_trending",
+    "manage_keys": "api_keys.manage_keys",
 }
 
 
@@ -69,14 +67,26 @@ def create_app(config_class=None):
     from .routes.preferences import prefs_bp
     from .routes.saved import saved_bp
     from .routes.health import health_bp
-    from .routes.trending import trending_bp
+    from .routes.api_keys import api_keys_bp
+    from .routes.api_v1 import api_v1_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(news_bp)
     app.register_blueprint(prefs_bp)
     app.register_blueprint(saved_bp)
     app.register_blueprint(health_bp)
-    app.register_blueprint(trending_bp)
+    app.register_blueprint(api_keys_bp)
+    app.register_blueprint(api_v1_bp)
+
+    # Phase 6: Initialize Flask-Mail when newsletter is enabled
+    if app.config.get("ENABLE_NEWSLETTER", False):
+        from .services.email_service import init_mail
+        init_mail(app)
+
+    # Phase 6: Start APScheduler when enabled
+    if app.config.get("SCHEDULER_ENABLED", True):
+        from .scheduler import init_scheduler
+        init_scheduler(app)
 
     # Handle bare endpoint names in url_for (templates use unqualified names)
     def _remap_bare_endpoint(error, endpoint, values):

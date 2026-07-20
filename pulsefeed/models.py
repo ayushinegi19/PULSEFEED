@@ -22,6 +22,10 @@ class UserPreference(db.Model):
     sources = db.Column(db.String(255))
     countries = db.Column(db.String(100))
 
+    # Phase 6: Newsletter / email digest
+    newsletter_opt_in = db.Column(db.Boolean, default=False, nullable=False)
+    digest_frequency = db.Column(db.String(20), default="daily")
+
 
 class SavedArticle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,12 +58,55 @@ class ArticleInteraction(db.Model):
     user = db.relationship("User", backref="interactions")
 
 
+# ── Phase 5: Trending Topics ──────────────────────────────────────────────
+
 class TrendingTopic(db.Model):
+    """A topic flagged as trending (Phase 5)."""
     id = db.Column(db.Integer, primary_key=True)
     topic = db.Column(db.String(255), nullable=False, index=True)
-    keyword = db.Column(db.String(255), nullable=False)
     article_count = db.Column(db.Integer, default=0)
-    baseline_count = db.Column(db.Float, default=0.0)
-    multiplier = db.Column(db.Float, default=1.0)
-    articles_json = db.Column(db.Text)
+    score = db.Column(db.Float, default=0.0)
+    is_flagged = db.Column(db.Boolean, default=False, nullable=False, index=True)
     detected_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+# ── Phase 6: Newsletter / Email Digest ────────────────────────────────────
+
+class NewsletterLog(db.Model):
+    """Tracks which articles have been emailed to which user (avoid duplicate sends)."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False, index=True)
+    article_url = db.Column(db.String(512), nullable=False, index=True)
+    article_title = db.Column(db.String(512))
+    sent_at = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(20), default="success")  # success | failed
+    error_message = db.Column(db.Text)
+
+    user = db.relationship("User", backref="newsletter_logs")
+
+
+# ── Phase 7: Public API with Rate-Limited API Keys ──────────────────────────
+
+class ApiKey(db.Model):
+    """API key for public API access. Key is stored hashed, never plaintext."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False, index=True)
+    key_hash = db.Column(db.String(128), nullable=False, unique=True, index=True)
+    name = db.Column(db.String(100))
+    rate_limit_tier = db.Column(db.String(20), default="free", nullable=False)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User", backref="api_keys")
+
+
+class ApiKeyUsage(db.Model):
+    """Simple usage log for API key requests."""
+    id = db.Column(db.Integer, primary_key=True)
+    api_key_id = db.Column(db.Integer, db.ForeignKey("api_key.id"), nullable=False, index=True)
+    endpoint = db.Column(db.String(255))
+    method = db.Column(db.String(10))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    api_key = db.relationship("ApiKey", backref="usage_logs")
