@@ -30,7 +30,6 @@ class Config:
     ENABLE_HISTORY_RANKING = os.environ.get("ENABLE_HISTORY_RANKING", "true").lower() == "true"
     HISTORY_MIN_INTERACTIONS = int(os.environ.get("HISTORY_MIN_INTERACTIONS", "5"))
 
-<<<<<<< HEAD
     # Feature flags — Phase 5 (trending)
     ENABLE_TRENDING = os.environ.get("ENABLE_TRENDING", "false").lower() == "true"
 
@@ -63,8 +62,6 @@ class Config:
     API_RATE_LIMIT_ENTERPRISE = os.environ.get("API_RATE_LIMIT_ENTERPRISE", "10000 per day")
     RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
 
-=======
->>>>>>> 6f65201d4a2a05204f650ff3813aadaedb7a5197
     # Debug flag
     FLASK_ENV = os.environ.get("FLASK_ENV", "production")
     DEBUG = FLASK_ENV == "development"
