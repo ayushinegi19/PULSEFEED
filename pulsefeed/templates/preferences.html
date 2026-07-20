@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Set News Preferences - PulseFeed</title>
-    
+
     <!-- Tailwind CSS & Tom Select -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.min.css" rel="stylesheet">
@@ -38,9 +38,14 @@
                 <a class="nav-link me-3" href="{{ url_for('set_preferences') }}">
                     <i class="bi bi-gear me-1"></i>Preferences
                 </a>
-                <a class="nav-link me-3" href="{{ url_for('saved') }}"">
+                <a class="nav-link me-3" href="{{ url_for('saved') }}">
                     <i class="bi bi-bookmark me-1"></i>Saved
                 </a>
+                {% if enable_public_api %}
+                <a class="nav-link me-3" href="{{ url_for('manage_keys') }}">
+                    <i class="bi bi-key me-1"></i>API Keys
+                </a>
+                {% endif %}
                 <a class="nav-link" href="{{ url_for('logout') }}">
                     <i class="bi bi-box-arrow-right me-1"></i>Logout
                 </a>
@@ -52,7 +57,7 @@
     <div class="flex items-center justify-center mt-10">
         <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
             <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Customize Your News Feed</h2>
-            
+
             <form method="POST" class="space-y-6">
                 <!-- News Categories -->
                 <div>
@@ -66,8 +71,12 @@
                         <option value="entertainment">Entertainment</option>
                         <option value="science">Science</option>
                         <option value="health">Health</option>
-                        <option value="general">General</option>
                         <option value="politics">Politics</option>
+                        <option value="world">World</option>
+                        <option value="top">Top</option>
+                        <option value="food">Food</option>
+                        <option value="travel">Travel</option>
+                        <option value="environment">Environment</option>
                     </select>
                 </div>
 
@@ -86,7 +95,7 @@
                     </select>
                 </div>
 
-                <!-- 🌍 Country Selection -->
+                <!-- Country Selection -->
                 <div>
                     <label class="block text-gray-700 font-bold mb-2" for="country">
                         Choose Your Country
@@ -103,7 +112,26 @@
                     </select>
                 </div>
 
-                <!-- 🔘 Save Button -->
+                {% if enable_newsletter %}
+                <!-- Newsletter Opt-In -->
+                <div class="border-top pt-4 mt-4">
+                    <h5 class="text-gray-700 font-bold mb-3"><i class="bi bi-envelope me-1"></i> Email Digest</h5>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="newsletter_opt_in" name="newsletter_opt_in"
+                               {% if current_user.preferences and current_user.preferences.newsletter_opt_in %}checked{% endif %}>
+                        <label class="form-check-label" for="newsletter_opt_in">Opt into email digests</label>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-bold mb-2" for="digest_frequency">Digest Frequency</label>
+                        <select id="digest_frequency" name="digest_frequency" class="block w-full form-select">
+                            <option value="daily" {% if current_user.preferences and current_user.preferences.digest_frequency == 'daily' %}selected{% endif %}>Daily</option>
+                            <option value="weekly" {% if current_user.preferences and current_user.preferences.digest_frequency == 'weekly' %}selected{% endif %}>Weekly</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Save Button -->
                 <div class="text-center">
                     <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
                         Save Preferences
@@ -113,15 +141,15 @@
         </div>
     </div>
 
-    <!-- ⚙️ Initialize Tom Select -->
+    <!-- Initialize Tom Select -->
     <script>
         new TomSelect('#categories', {
-            maxItems: 5, // Limit to 5 selections
+            maxItems: 5,
             placeholder: 'Select up to 5 categories'
         });
 
         new TomSelect('#sources', {
-            maxItems: 5, // Limit to 5 selections
+            maxItems: 5,
             placeholder: 'Select up to 5 sources'
         });
     </script>

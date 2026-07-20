@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseFeed Digest</title>
+</head>
+<body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
+
+    <div style="background-color: #ffffff; border-radius: 8px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h1 style="color: #1a56db; font-size: 24px; margin: 0 0 8px 0;">PulseFeed Digest</h1>
+        <p style="color: #6b7280; font-size: 14px; margin: 0;">Hi {{ username }}, here are your latest personalized news picks.</p>
+    </div>
+
+    <div style="background-color: #ffffff; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <table style="width: 100%; border-collapse: collapse;">
+            {% for article in articles %}
+            <tr>
+                <td style="padding: 16px 0; border-bottom: 1px solid #e5e7eb;">
+                    <a href="{{ article.url }}"
+                       style="font-size: 16px; font-weight: 600; color: #1a56db; text-decoration: none;">
+                        {{ article.title }}
+                    </a>
+                    {% if article.description %}
+                    <p style="color: #4b5563; font-size: 14px; margin: 4px 0 0 0;">{{ article.description }}</p>
+                    {% endif %}
+                    <span style="color: #9ca3af; font-size: 12px;">{{ article.source }}</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div style="text-align: center; padding: 16px 0;">
+        <p style="color: #9ca3af; font-size: 12px;">
+            You're receiving this because you opted into PulseFeed digests.
+            Visit your preferences to change frequency or opt out.
+        </p>
+        <p style="color: #9ca3af; font-size: 12px;">&copy; 2024 PulseFeed</p>
+    </div>
+
+</body>
+</html>
