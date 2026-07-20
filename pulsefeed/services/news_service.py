@@ -10,6 +10,7 @@ from .. import db
 
 logger = logging.getLogger(__name__)
 
+<<<<<<< HEAD
 # Map friendly source names to actual domains recognized by NewsData.io
 SOURCE_DOMAIN_MAP = {
     "bbc-news": "bbc.com",
@@ -27,6 +28,8 @@ VALID_CATEGORIES = {
     "top", "environment",
 }
 
+=======
+>>>>>>> 6f65201d4a2a05204f650ff3813aadaedb7a5197
 
 def _cache_key(categories, sources, country):
     raw = f"{categories}|{sources}|{country}"
@@ -99,11 +102,18 @@ def _fetch_from_newsdata(categories_list, sources_list, country):
 
     # --- Tier 1: domainurl ---
     if sources_list:
+<<<<<<< HEAD
         domains = [SOURCE_DOMAIN_MAP.get(s.strip(), s.strip()) for s in sources_list]
         params = {
             "apikey": api_key,
             "language": "en",
             "domainurl": ",".join(domains),
+=======
+        params = {
+            "apikey": api_key,
+            "language": "en",
+            "domain": ",".join(s.strip() for s in sources_list),
+>>>>>>> 6f65201d4a2a05204f650ff3813aadaedb7a5197
         }
         logger.info("Fetching news via domainurl: %s", domains)
         try:

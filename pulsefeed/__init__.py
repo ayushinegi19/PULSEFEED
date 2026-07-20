@@ -25,7 +25,10 @@ BARE_ENDPOINT_MAP = {
     "get_saved_articles": "saved.get_saved_articles",
     "delete_saved_article": "saved.delete_saved_article",
     "search_saved_articles": "saved.search_saved_articles",
+<<<<<<< HEAD
     "manage_keys": "api_keys.manage_keys",
+=======
+>>>>>>> 6f65201d4a2a05204f650ff3813aadaedb7a5197
 }
 
 
@@ -67,14 +70,18 @@ def create_app(config_class=None):
     from .routes.preferences import prefs_bp
     from .routes.saved import saved_bp
     from .routes.health import health_bp
+<<<<<<< HEAD
     from .routes.api_keys import api_keys_bp
     from .routes.api_v1 import api_v1_bp
+=======
+>>>>>>> 6f65201d4a2a05204f650ff3813aadaedb7a5197
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(news_bp)
     app.register_blueprint(prefs_bp)
     app.register_blueprint(saved_bp)
     app.register_blueprint(health_bp)
+<<<<<<< HEAD
     app.register_blueprint(api_keys_bp)
     app.register_blueprint(api_v1_bp)
 
@@ -87,6 +94,8 @@ def create_app(config_class=None):
     if app.config.get("SCHEDULER_ENABLED", True):
         from .scheduler import init_scheduler
         init_scheduler(app)
+=======
+>>>>>>> 6f65201d4a2a05204f650ff3813aadaedb7a5197
 
     # Handle bare endpoint names in url_for (templates use unqualified names)
     def _remap_bare_endpoint(error, endpoint, values):

@@ -56,6 +56,7 @@ class ArticleInteraction(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User", backref="interactions")
+<<<<<<< HEAD
 
 
 # ── Phase 5: Trending Topics ──────────────────────────────────────────────
@@ -110,3 +111,5 @@ class ApiKeyUsage(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     api_key = db.relationship("ApiKey", backref="usage_logs")
+=======
+>>>>>>> 6f65201d4a2a05204f650ff3813aadaedb7a5197
