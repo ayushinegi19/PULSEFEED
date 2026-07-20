@@ -1,5 +1,5 @@
 import logging
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, current_app
 from flask_login import login_required, current_user
 from sqlalchemy import or_
 
@@ -13,7 +13,10 @@ logger = logging.getLogger(__name__)
 @saved_bp.route("/saved")
 @login_required
 def saved():
-    return render_template("saved.html")
+    return render_template(
+        "saved.html",
+        enable_public_api=current_app.config.get("ENABLE_PUBLIC_API", False),
+    )
 
 
 @saved_bp.route("/save_article", methods=["POST"])
